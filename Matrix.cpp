@@ -67,17 +67,19 @@ void Matrix::getRREF() {
             
             int pivot_row = findNextPivot(row, col);
             if(pivot_row == -1) {
+                bool zero_row = true;
                 // back to current row and go right
                 for(int i = col; i < num_col; ++i) {
                     if(mat[row][i] != 0) {
                         // found non-zero -> make it pivot
                         col = i;
+                        zero_row = false;
                         break;
                     }
                 } // for
 
-                // all zero row - so just skip
-                continue;
+                // all zero row - so just skip to next row
+                if(zero_row) continue;
             }
             else {
                 swap(mat[row], mat[pivot_row]);
@@ -85,7 +87,7 @@ void Matrix::getRREF() {
         } // if entry is 0
 
         double pivot = mat[row][col];
-        // divide row by the pivot to obtain pivot = 1 (division causes precision error?)
+        // divide entire row by the pivot to obtain pivot = 1 (division causes precision error?)
         for(double &elem: mat[row]) {
             elem /= pivot;
         }
