@@ -12,4 +12,4 @@ To create a Matrix class that supports basic matrix operations with simple and e
 - [ ] Matrix Multiplication
 - [ ] Solving Linear Systems
 ### Implementation Details
-* RREF: Perform row operations to identify pivot columns...
+See Wiki
