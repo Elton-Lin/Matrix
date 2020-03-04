@@ -1,7 +1,6 @@
 #include "Matrix.h"
 #include <sstream>
 #include <limits>
-#include <ios>
 
 using namespace std;
 
@@ -10,7 +9,7 @@ Matrix::Matrix(int r, int c): num_row(r), num_col(c) {
     identity_mat.resize(num_row);
     int diag = 0;
 
-    // create the identity matrix
+    // create the identity matrix for later use
     for(auto &v: identity_mat) {
         v.resize(num_col);
         v[diag++] = 1;
@@ -21,7 +20,6 @@ Matrix::Matrix(int r, int c): num_row(r), num_col(c) {
 // User input handling is fairly robust
 void Matrix::fillMatrix() {
     
-    // cin.ignore(numeric_limits<streamsize>::max(),'\n');
     mat.resize(num_row);
     for(auto &v: mat) {
         v.reserve(num_col);
@@ -29,7 +27,7 @@ void Matrix::fillMatrix() {
 
     cout << "Enter each row, separarte elements with space, then press enter" << endl;
     for(int r = 0; r < num_row; ++r) {
-
+        
         cout << "row " << r + 1 << ": ";
 
         string row, c;
@@ -48,27 +46,28 @@ void Matrix::fillMatrix() {
 
 }
 
-// go down rows first, return -1 if reached end
+// find the next potential pivot in the current column
 int Matrix::findNextPivot(int start_row, int col) {
+    // go down each rows, return -1 if reached end (zero-col)
     for(int i = start_row; i < num_row; ++i) {
         if(mat[i][col] != 0) return i;
     }
     return -1;
 }
 
+// might want to make it return the RREF (a new copy matrix)
 void Matrix::getRREF() {
 
     int col = 0;
-
     // row operations
     for(int row = 0; row < num_row; ++row) {
 
-        if(mat[row][col] == 0) {
+        if(mat[row][col] == 0) { // entry is 0
             
             int pivot_row = findNextPivot(row, col);
             if(pivot_row == -1) {
                 bool zero_row = true;
-                // back to current row and go right
+                // search next column (back to current row and go right)
                 for(int i = col; i < num_col; ++i) {
                     if(mat[row][i] != 0) {
                         // found non-zero -> make it pivot
@@ -78,23 +77,24 @@ void Matrix::getRREF() {
                     }
                 } // for
 
-                // all zero row - so just skip to next row
+                // all-zero row - so just skip to next row
                 if(zero_row) continue;
             }
             else {
                 swap(mat[row], mat[pivot_row]);
             }
-        } // if entry is 0
+        } // if 
 
         double pivot = mat[row][col];
-        // divide entire row by the pivot to obtain pivot = 1 (division causes precision error?)
+        // divide entire row by the pivot to obtain pivot = 1 
+        // (division causes precision error?)
         for(double &elem: mat[row]) {
             elem /= pivot;
         }
 
         // printMatrix();
 
-        // eliminate the elements for other rows to obtain a pivot column
+        // eliminate the elements for other rows to obtain pivot column
         for(int other_row = 0; other_row < num_row; ++other_row) {
             if(other_row != row) {
 
@@ -108,11 +108,23 @@ void Matrix::getRREF() {
     } // for row
 }
 
-// void Matrix::rowOp(int r, double constant) {}
+// Given matrices A, B, return product matrix C.
+// A.multiply(B) gives A * B = C
+Matrix Matrix::multiply(Matrix mat_b) {
+
+    return Matrix(1, 1); // placeholder
+}
+
+// Transpose the matrix
+Matrix Matrix::transpose(Matrix mat) {
+
+    return Matrix(mat.num_col, mat.num_row); // placeholder
+}
+
 
 void Matrix::printMatrix() {
 
-    // find a way to format this nicely
+    // find a way to format this nicely (align)
 
     for(auto &v: mat) {
         for(auto i: v) {
