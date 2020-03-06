@@ -4,10 +4,10 @@
 
 using namespace std;
 
-Matrix::Matrix(int r, int c): num_row(r), num_col(c) {
+Matrix::Matrix(unsigned int r, unsigned int c): num_row(r), num_col(c) {
 
     identity_mat.resize(num_row);
-    int diag = 0;
+    unsigned int diag = 0;
 
     // create the identity matrix for later use
     for(auto &v: identity_mat) {
@@ -16,6 +16,9 @@ Matrix::Matrix(int r, int c): num_row(r), num_col(c) {
     }
 }
 
+void Matrix::fillMatrix(vector<vector<double>> v2) {
+    mat = v2;
+}
 
 // User input handling is fairly robust
 void Matrix::fillMatrix() {
@@ -26,7 +29,7 @@ void Matrix::fillMatrix() {
     }
 
     cout << "Enter each row, separarte elements with space, then press enter" << endl;
-    for(int r = 0; r < num_row; ++r) {
+    for(unsigned int r = 0; r < num_row; ++r) {
         
         cout << "row " << r + 1 << ": ";
 
@@ -47,10 +50,10 @@ void Matrix::fillMatrix() {
 }
 
 // find the next potential pivot in the current column
-int Matrix::findNextPivot(int start_row, int col) {
+int Matrix::findNextPivot(unsigned int start_row, unsigned int col) {
     // go down each rows, return -1 if reached end (zero-col)
-    for(int i = start_row; i < num_row; ++i) {
-        if(mat[i][col] != 0) return i;
+    for(unsigned int i = start_row; i < num_row; ++i) {
+        if(mat[i][col] != 0) return int(i);
     }
     return -1;
 }
@@ -58,17 +61,20 @@ int Matrix::findNextPivot(int start_row, int col) {
 // might want to make it return the RREF (a new copy matrix)
 void Matrix::getRREF() {
 
-    int col = 0;
+    unsigned int col = 0;
     // row operations
-    for(int row = 0; row < num_row; ++row) {
+    for(unsigned int row = 0; row < num_row; ++row) {
 
         if(mat[row][col] == 0) { // entry is 0
             
             int pivot_row = findNextPivot(row, col);
-            if(pivot_row == -1) {
+            if(pivot_row != -1) {
+                swap(mat[row], mat[unsigned(pivot_row)]);
+            }
+            else {
                 bool zero_row = true;
                 // search next column (back to current row and go right)
-                for(int i = col; i < num_col; ++i) {
+                for(unsigned int i = col; i < num_col; ++i) {
                     if(mat[row][i] != 0) {
                         // found non-zero -> make it pivot
                         col = i;
@@ -79,9 +85,6 @@ void Matrix::getRREF() {
 
                 // all-zero row - so just skip to next row
                 if(zero_row) continue;
-            }
-            else {
-                swap(mat[row], mat[pivot_row]);
             }
         } // if 
 
@@ -95,11 +98,11 @@ void Matrix::getRREF() {
         // printMatrix();
 
         // eliminate the elements for other rows to obtain pivot column
-        for(int other_row = 0; other_row < num_row; ++other_row) {
+        for(unsigned int other_row = 0; other_row < num_row; ++other_row) {
             if(other_row != row) {
 
                 double divisor = mat[other_row][col];
-                for(int c = 0; c < num_col; ++c) {
+                for(unsigned int c = 0; c < num_col; ++c) {
                     mat[other_row][c] -= (divisor * mat[row][c]);
                 }
             }

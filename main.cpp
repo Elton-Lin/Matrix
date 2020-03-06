@@ -6,7 +6,7 @@ using namespace std;
 int check_input(string &s) {
 
     for(char c: s) {
-        if(!isdigit(c)) {
+        if(!isdigit(c)) { // also takes care of negative numbers
             cout << "invalid input for matrix dimensions" << endl;
             exit(0);
         }
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     cout << "Please enter number of columns: ";
     getline(cin, input); col = check_input(input);
 
-    Matrix m(row, col);
+    Matrix m((unsigned(row)), (unsigned(col)));
     m.fillMatrix();
     m.printMatrix();
 
