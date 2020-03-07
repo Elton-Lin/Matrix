@@ -38,21 +38,15 @@ void Matrix::fillMatrix() {
         stringstream ss(row);
         size_t c = 0;
         while(ss >> col) {
-            // mat[r].push_back(stod(col));
             if(c > num_col) break; // safer than access out of bound
             mat[r][c++] = stod(col);
         }
 
-        if(c != num_col) {
+        if(c != num_col) { // abort when size don't match
             cerr << "column size does not match." << endl;
             exit(0);  
         }
 
-        // // abort when size don't match
-        // if(mat[r].size() != num_col) {
-        //     cerr << "column size does not match." << endl;
-        //     exit(0);  
-        // }
     }
 
 }
@@ -119,9 +113,11 @@ void Matrix::getRREF() {
     } // for row
 }
 
+
+
 // Given matrices A, B, return product matrix C.
 // A.multiply(B) gives A * B = C
-Matrix Matrix::multiply(Matrix mat_b) {
+Matrix Matrix::multiply(const Matrix &mat_b) {
     if(this->num_col!=mat_b.num_row){
         cerr << "Multiplication not defined, matrix dimention error\n";
         exit(0);
@@ -136,14 +132,17 @@ Matrix Matrix::multiply(Matrix mat_b) {
             cMat.mat[col][row] = temp;
         }
     }
-    return cMat; // placeholder
+    return cMat;
 }
 
+
+
 // Transpose the matrix
-Matrix Matrix::transpose(Matrix mat) {
+Matrix Matrix::transpose(const Matrix &mat) {
 
     return Matrix(mat.num_col, mat.num_row); // placeholder
 }
+
 
 
 void Matrix::printMatrix() {

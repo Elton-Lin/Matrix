@@ -20,8 +20,8 @@ class Matrix {
     int findNextPivot(size_t r, size_t c);
     void getRREF();
 
-    Matrix multiply(Matrix mat_b);
-    Matrix transpose(Matrix mat);
+    Matrix multiply(const Matrix &mat_b);
+    Matrix transpose(const Matrix &mat);
 
 
     void printMatrix();
