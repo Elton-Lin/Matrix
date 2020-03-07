@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     cout << "Please enter number of columns: ";
     getline(cin, input); col = check_input(input);
 
-    Matrix m((unsigned(row)), (unsigned(col)));
+    Matrix m((size_t(row)), (size_t(col)));
     m.fillMatrix();
     m.printMatrix();
 

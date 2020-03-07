@@ -5,19 +5,19 @@
 class Matrix {
 
     private:
-    unsigned int num_row, num_col;
+    size_t num_row, num_col;
     std::vector<std::vector<double>> mat;
     std::vector<std::vector<double>> identity_mat;
 
     public:
 
-    Matrix(unsigned int r, unsigned int c);//: num_row(r), num_col(c) {}
+    Matrix(size_t r, size_t c);//: num_row(r), num_col(c) {}
 
     void fillMatrix();
-    void fillMatrix(std::vector<std::vector<double>> v2);
+    void fillMatrix(const std::vector<std::vector<double>> &v2);
 
 
-    int findNextPivot(unsigned int r, unsigned int c);
+    int findNextPivot(size_t r, size_t c);
     void getRREF();
 
     Matrix multiply(Matrix mat_b);

@@ -4,10 +4,15 @@
 
 using namespace std;
 
-Matrix::Matrix(unsigned int r, unsigned int c): num_row(r), num_col(c) {
+Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
+
+    mat.resize(num_row);
+    for(auto &v: mat) {
+        v.resize(num_col);
+    }
 
     identity_mat.resize(num_row);
-    unsigned int diag = 0;
+    size_t diag = 0;
 
     // create the identity matrix for later use
     for(auto &v: identity_mat) {
@@ -16,43 +21,46 @@ Matrix::Matrix(unsigned int r, unsigned int c): num_row(r), num_col(c) {
     }
 }
 
-void Matrix::fillMatrix(vector<vector<double>> v2) {
+void Matrix::fillMatrix(const vector<vector<double>> &v2) {
     mat = v2;
 }
 
 // User input handling is fairly robust
 void Matrix::fillMatrix() {
-    
-    mat.resize(num_row);
-    for(auto &v: mat) {
-        v.reserve(num_col);
-    }
 
     cout << "Enter each row, separarte elements with space, then press enter" << endl;
-    for(unsigned int r = 0; r < num_row; ++r) {
+    for(size_t r = 0; r < num_row; ++r) {
         
         cout << "row " << r + 1 << ": ";
 
-        string row, c;
+        string row, col;
         getline(cin, row);
         stringstream ss(row);
-        while(ss >> c) {
-            mat[r].push_back(stod(c));
+        size_t c = 0;
+        while(ss >> col) {
+            // mat[r].push_back(stod(col));
+            if(c > num_col) break; // safer than access out of bound
+            mat[r][c++] = stod(col);
         }
 
-        // // abort when size don't match
-        if(mat[r].size() != num_col) {
+        if(c != num_col) {
             cerr << "column size does not match." << endl;
             exit(0);  
         }
+
+        // // abort when size don't match
+        // if(mat[r].size() != num_col) {
+        //     cerr << "column size does not match." << endl;
+        //     exit(0);  
+        // }
     }
 
 }
 
 // find the next potential pivot in the current column
-int Matrix::findNextPivot(unsigned int start_row, unsigned int col) {
+int Matrix::findNextPivot(size_t start_row, size_t col) {
     // go down each rows, return -1 if reached end (zero-col)
-    for(unsigned int i = start_row; i < num_row; ++i) {
+    for(size_t i = start_row; i < num_row; ++i) {
         if(mat[i][col] != 0) return int(i);
     }
     return -1;
@@ -61,9 +69,9 @@ int Matrix::findNextPivot(unsigned int start_row, unsigned int col) {
 // might want to make it return the RREF (a new copy matrix)
 void Matrix::getRREF() {
 
-    unsigned int col = 0;
+    size_t col = 0;
     // row operations
-    for(unsigned int row = 0; row < num_row; ++row) {
+    for(size_t row = 0; row < num_row; ++row) {
 
         if(mat[row][col] == 0) { // entry is 0
             
@@ -74,7 +82,7 @@ void Matrix::getRREF() {
             else {
                 bool zero_row = true;
                 // search next column (back to current row and go right)
-                for(unsigned int i = col; i < num_col; ++i) {
+                for(size_t i = col; i < num_col; ++i) {
                     if(mat[row][i] != 0) {
                         // found non-zero -> make it pivot
                         col = i;
@@ -98,11 +106,11 @@ void Matrix::getRREF() {
         // printMatrix();
 
         // eliminate the elements for other rows to obtain pivot column
-        for(unsigned int other_row = 0; other_row < num_row; ++other_row) {
+        for(size_t other_row = 0; other_row < num_row; ++other_row) {
             if(other_row != row) {
 
                 double divisor = mat[other_row][col];
-                for(unsigned int c = 0; c < num_col; ++c) {
+                for(size_t c = 0; c < num_col; ++c) {
                     mat[other_row][c] -= (divisor * mat[row][c]);
                 }
             }
