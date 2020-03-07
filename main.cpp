@@ -34,6 +34,26 @@ int main(int argc, char *argv[]) {
     m.getRREF();
     cout << "RREF: " << endl;
     m.printMatrix();
+    //for testing multiplication
+    int row2,col2;
+    cout << "Please enter number of rows for the second matrix: ";
+    getline(cin, input); row2 = check_input(input);
+    cout << "Please enter number of columns for the second matrix: ";
+    getline(cin, input); col2 = check_input(input);
 
+    Matrix b(row2, col2);
+    b.fillMatrix();
+
+    int row3,col3;
+    cout << "Please enter number of rows for the third matrix: ";
+    getline(cin, input); row3 = check_input(input);
+    cout << "Please enter number of columns for the third matrix: ";
+    getline(cin, input); col3 = check_input(input);
+
+    Matrix c(row3, col3);
+    c.fillMatrix();
+
+    Matrix product = b.multiply(c);
+    product.printMatrix();
     return 0;
 }

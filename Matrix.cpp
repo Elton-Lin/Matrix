@@ -111,8 +111,21 @@ void Matrix::getRREF() {
 // Given matrices A, B, return product matrix C.
 // A.multiply(B) gives A * B = C
 Matrix Matrix::multiply(Matrix mat_b) {
-
-    return Matrix(1, 1); // placeholder
+    if(this->num_col!=mat_b.num_row){
+        cerr << "Multiplication not defined, matrix dimention error\n";
+        exit(0);
+    }
+    Matrix cMat(this->num_row,mat_b.num_col);
+    for(size_t col = 0; col < cMat.num_col;col++){
+        for(size_t row = 0; row<cMat.num_row;row++){
+            double temp = 0;
+            for(size_t mid = 0; mid<mat_b.num_row;mid++){
+                temp += this->mat[col][mid]*mat_b.mat[mid][row];
+            }
+            cMat.mat[col][row] = temp;
+        }
+    }
+    return cMat; // placeholder
 }
 
 // Transpose the matrix
