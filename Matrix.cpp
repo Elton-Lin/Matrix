@@ -127,9 +127,9 @@ Matrix Matrix::multiply(const Matrix &mat_b) {
         for(size_t row = 0; row< cMat.num_row;row++){
             double temp = 0;
             for(size_t mid = 0; mid< mat_b.num_row ; mid++){
-                temp += this->mat[col][mid] * mat_b.mat[mid][row];
+                temp += this->mat[row][mid] * mat_b.mat[mid][col];
             }
-            cMat.mat[col][row] = temp;
+            cMat.mat[row][col] = temp;
         }
     }
     return cMat;
