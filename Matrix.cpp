@@ -139,8 +139,13 @@ Matrix Matrix::multiply(const Matrix &mat_b) {
 
 // Transpose the matrix
 Matrix Matrix::transpose(const Matrix &mat) {
-
-    return Matrix(mat.num_col, mat.num_row); // placeholder
+    Matrix trans(mat.num_col, mat.num_row);
+    for(size_t row = 0; row<mat.num_row; row++){
+        for(size_t col = 0; col<mat.num_col; col++){
+            trans.mat[col][row]=mat.mat[row][col];
+        }
+    }
+    return  trans;
 }
 
 
