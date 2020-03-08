@@ -83,8 +83,9 @@ int main(int argc, char *argv[]) {
     //test_trans();
     vector<string> types{ "RREF", "Multiplication", "Transpose", "(stab)" };
     unsigned int choice;
-
-    cout << "Matrix tester" << endl << endl;
+    cout<<endl;
+    cout << "             << -- Matrix tester -- >>" << endl;
+    cout << "===================================================" <<endl;
     for (size_t i = 0; i < types.size(); ++i)
         cout << "  " << i << ") " << types[i] << endl;
     cout << endl;
