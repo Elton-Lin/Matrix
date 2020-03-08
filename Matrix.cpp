@@ -4,10 +4,15 @@
 
 using namespace std;
 
-Matrix::Matrix(int r, int c): num_row(r), num_col(c) {
+Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
+
+    mat.resize(num_row);
+    for(auto &v: mat) {
+        v.resize(num_col);
+    }
 
     identity_mat.resize(num_row);
-    int diag = 0;
+    size_t diag = 0;
 
     // create the identity matrix for later use
     for(auto &v: identity_mat) {
@@ -16,41 +21,41 @@ Matrix::Matrix(int r, int c): num_row(r), num_col(c) {
     }
 }
 
+void Matrix::fillMatrix(const vector<vector<double>> &v2) {
+    mat = v2;
+}
 
 // User input handling is fairly robust
 void Matrix::fillMatrix() {
-    
-    mat.resize(num_row);
-    for(auto &v: mat) {
-        v.reserve(num_col);
-    }
 
     cout << "Enter each row, separarte elements with space, then press enter" << endl;
-    for(int r = 0; r < num_row; ++r) {
+    for(size_t r = 0; r < num_row; ++r) {
         
         cout << "row " << r + 1 << ": ";
 
-        string row, c;
+        string row, col;
         getline(cin, row);
         stringstream ss(row);
-        while(ss >> c) {
-            mat[r].push_back(stod(c));
+        size_t c = 0;
+        while(ss >> col) {
+            if(c > num_col) break; // safer than access out of bound
+            mat[r][c++] = stod(col);
         }
 
-        // // abort when size don't match
-        if(mat[r].size() != num_col) {
+        if(c != num_col) { // abort when size don't match
             cerr << "column size does not match." << endl;
             exit(0);  
         }
+
     }
 
 }
 
 // find the next potential pivot in the current column
-int Matrix::findNextPivot(int start_row, int col) {
+int Matrix::findNextPivot(size_t start_row, size_t col) {
     // go down each rows, return -1 if reached end (zero-col)
-    for(int i = start_row; i < num_row; ++i) {
-        if(mat[i][col] != 0) return i;
+    for(size_t i = start_row; i < num_row; ++i) {
+        if(mat[i][col] != 0) return int(i);
     }
     return -1;
 }
@@ -58,17 +63,20 @@ int Matrix::findNextPivot(int start_row, int col) {
 // might want to make it return the RREF (a new copy matrix)
 void Matrix::getRREF() {
 
-    int col = 0;
+    size_t col = 0;
     // row operations
-    for(int row = 0; row < num_row; ++row) {
+    for(size_t row = 0; row < num_row; ++row) {
 
         if(mat[row][col] == 0) { // entry is 0
             
             int pivot_row = findNextPivot(row, col);
-            if(pivot_row == -1) {
+            if(pivot_row != -1) {
+                swap(mat[row], mat[unsigned(pivot_row)]);
+            }
+            else {
                 bool zero_row = true;
                 // search next column (back to current row and go right)
-                for(int i = col; i < num_col; ++i) {
+                for(size_t i = col; i < num_col; ++i) {
                     if(mat[row][i] != 0) {
                         // found non-zero -> make it pivot
                         col = i;
@@ -79,9 +87,6 @@ void Matrix::getRREF() {
 
                 // all-zero row - so just skip to next row
                 if(zero_row) continue;
-            }
-            else {
-                swap(mat[row], mat[pivot_row]);
             }
         } // if 
 
@@ -95,11 +100,11 @@ void Matrix::getRREF() {
         // printMatrix();
 
         // eliminate the elements for other rows to obtain pivot column
-        for(int other_row = 0; other_row < num_row; ++other_row) {
+        for(size_t other_row = 0; other_row < num_row; ++other_row) {
             if(other_row != row) {
 
                 double divisor = mat[other_row][col];
-                for(int c = 0; c < num_col; ++c) {
+                for(size_t c = 0; c < num_col; ++c) {
                     mat[other_row][c] -= (divisor * mat[row][c]);
                 }
             }
@@ -108,31 +113,36 @@ void Matrix::getRREF() {
     } // for row
 }
 
+
+
 // Given matrices A, B, return product matrix C.
 // A.multiply(B) gives A * B = C
-Matrix Matrix::multiply(Matrix mat_b) {
+Matrix Matrix::multiply(const Matrix &mat_b) {
     if(this->num_col!=mat_b.num_row){
         cerr << "Multiplication not defined, matrix dimention error\n";
         exit(0);
     }
     Matrix cMat(this->num_row,mat_b.num_col);
     for(size_t col = 0; col < cMat.num_col;col++){
-        for(size_t row = 0; row<cMat.num_row;row++){
+        for(size_t row = 0; row< cMat.num_row;row++){
             double temp = 0;
-            for(size_t mid = 0; mid<mat_b.num_row;mid++){
-                temp += this->mat[col][mid]*mat_b.mat[mid][row];
+            for(size_t mid = 0; mid< mat_b.num_row ; mid++){
+                temp += this->mat[row][mid] * mat_b.mat[mid][col];
             }
-            cMat.mat[col][row] = temp;
+            cMat.mat[row][col] = temp;
         }
     }
-    return cMat; // placeholder
+    return cMat;
 }
 
+
+
 // Transpose the matrix
-Matrix Matrix::transpose(Matrix mat) {
+Matrix Matrix::transpose(const Matrix &mat) {
 
     return Matrix(mat.num_col, mat.num_row); // placeholder
 }
+
 
 
 void Matrix::printMatrix() {
