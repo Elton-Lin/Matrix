@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     // test_RREF();
     //test_multiplication();
     //test_trans();
-    vector<string> types{ "RREF", "Multiplication", "Transpose", "(stab)" };
+    vector<string> types{ "RREF", "Multiplication", "Transpose", "Exit" };
     unsigned int choice;
     cout<<endl;
     cout << "             << -- Matrix tester -- >>" << endl;
@@ -104,13 +104,14 @@ int main(int argc, char *argv[]) {
         test_trans();
     } // else if
     else if (choice == 3) {
-        cout << "Not yet implemented"<<endl;
+        cout << "C ya"<<endl;
+        return 0;
     } // else if
     else {
         cout << "Unknown function!" << endl << endl;
         exit(1);
     } // else
-
+    main(argc,argv);
     
     return 0;
 }
