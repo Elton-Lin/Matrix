@@ -60,14 +60,58 @@ void test_multiplication() {
     Matrix product = b.multiply(c);
     product.printMatrix();
 }
+void test_trans() {
+    string input;
+    int row2,col2;
+    cout << "Please enter number of rows for the matrix: ";
+    getline(cin, input); row2 = check_input(input);
+    cout << "Please enter number of columns for the matrix: ";
+    getline(cin, input); col2 = check_input(input);
+    Matrix b((size_t(row2)), (size_t(col2)));
+    b.fillMatrix();
+
+    Matrix trans = b.transpose(b);
+    trans.printMatrix();
+}
 
 int main(int argc, char *argv[]) {
 
     cout.precision(2);
 
     // test_RREF();
-    test_multiplication();
+    //test_multiplication();
+    //test_trans();
+    vector<string> types{ "RREF", "Multiplication", "Transpose", "Exit" };
+    unsigned int choice;
+    cout<<endl;
+    cout << "             << -- Matrix tester -- >>" << endl;
+    cout << "===================================================" <<endl;
+    for (size_t i = 0; i < types.size(); ++i)
+        cout << "  " << i << ") " << types[i] << endl;
+    cout << endl;
+    cout << "Select one: ";
+    cin >> choice;
+    string junk;
+    getline(cin,junk);
 
+    if (choice == 0) {
+        test_RREF();
+    } // if
+    else if (choice == 1) {
+        test_multiplication();
+    } // else if
+    else if (choice == 2) {
+        test_trans();
+    } // else if
+    else if (choice == 3) {
+        cout << "C ya"<<endl;
+        return 0;
+    } // else if
+    else {
+        cout << "Unknown function!" << endl << endl;
+        exit(1);
+    } // else
+    main(argc,argv);
     
     return 0;
 }
