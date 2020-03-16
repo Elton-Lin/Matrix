@@ -23,6 +23,7 @@ class Matrix {
     Matrix multiply(const Matrix &mat_b);
     Matrix transpose(const Matrix &mat);
 
+    double getDeterminant();
 
     void printMatrix();
 };

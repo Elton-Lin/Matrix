@@ -33,6 +33,8 @@ void test_REF() {
     auto ref_m = m.getREF(false);
     cout << "RREF: " << endl;
     ref_m.printMatrix();
+    double det = m.getDeterminant();
+    cout << "det: " << det << endl;
 
 }
 

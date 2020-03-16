@@ -15,6 +15,7 @@ Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
     size_t diag = 0;
 
     // create the identity matrix for later use
+    // only works for square mat i think...
     for(auto &v: identity_mat) {
         v.resize(num_col);
         v[diag++] = 1;
@@ -22,7 +23,7 @@ Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
 }
 
 void Matrix::fillMatrix(const vector<vector<double>> &v2) {
-    mat = v2;
+    mat = v2; // v2 is a ref, but copied by assign op
 }
 
 // User input handling is fairly robust
@@ -127,6 +128,26 @@ Matrix Matrix::getREF(bool reduced) {
     } // for row
 
     return new_mat;
+}
+
+
+
+double Matrix::getDeterminant() {
+
+    if(this->num_row != this->num_col) {
+        cerr << "does not support determinant for non-square matrix, returing 0" << endl;
+        return 0;
+    }
+
+    Matrix ref = this->getREF(false);
+    double det = 1;
+    size_t diag = 0;
+
+    for(auto &v2: ref.mat) {
+        det *= v2[diag++];
+    }
+    return det;
+
 }
 
 
