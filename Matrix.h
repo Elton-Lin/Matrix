@@ -18,7 +18,7 @@ class Matrix {
 
 
     int findNextPivot(size_t r, size_t c);
-    void getRREF();
+    Matrix getREF(bool reduced);
 
     Matrix multiply(const Matrix &mat_b);
     Matrix transpose(const Matrix &mat);
