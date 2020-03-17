@@ -111,7 +111,7 @@ Matrix Matrix::getREF(bool reduced) {
         else {
             start_row = row + 1; // only need diagonal triangle 0s (left)
         }
-        // print_matrix();
+        new_mat.printMatrix();
 
         // eliminate the elements for other rows to obtain pivot column
         for(size_t other_row = start_row; other_row < num_row; ++other_row) {
