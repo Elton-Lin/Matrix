@@ -30,16 +30,16 @@ void test_REF() {
     cout << "Input Matrix: " << endl;
     m.printMatrix();
 
-    // auto ref_m = m.getREF(false);
-    // cout << "REF: " << endl;
-    // ref_m.printMatrix();
-
     auto rref_m = m.getREF(true);
     cout << "RREF: " << endl;
     rref_m.printMatrix();
 
-    // double det = m.getDeterminant();
-    // cout << "det: " << det << endl;
+    auto ref_m = m.getREF(false);
+    cout << "REF: " << endl;
+    ref_m.printMatrix();
+
+    double det = m.getDeterminant();
+    cout << "det: " << det << endl;
 
 }
 

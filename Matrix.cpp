@@ -81,6 +81,7 @@ Matrix Matrix::getREF(bool reduced) {
             int pivot_row = findNextPivot(ref_mat, row, col);
             if(pivot_row != -1) {
                 swap(ref_mat[row], ref_mat[unsigned(pivot_row)]);
+                ++parity_ref;
             }
             else {
                 bool zero_row = true;
@@ -145,6 +146,8 @@ double Matrix::getDeterminant() {
     for(auto &v2: ref.mat) {
         det *= v2[diag++];
     }
+    det *= (parity_ref % 2) ? -1 : 1;  // odd: -1, even: +1
+    cout << "parity: " << parity_ref << endl;
     return det;
 
 }

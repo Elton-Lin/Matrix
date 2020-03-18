@@ -8,6 +8,7 @@ class Matrix {
     size_t num_row, num_col;
     std::vector<std::vector<double>> mat;
     std::vector<std::vector<double>> identity_mat;
+    int parity_ref = 0;
 
     public:
 
