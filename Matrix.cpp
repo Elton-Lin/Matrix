@@ -53,10 +53,10 @@ void Matrix::fillMatrix() {
 }
 
 // find the next potential pivot in the current column
-int Matrix::findNextPivot(size_t start_row, size_t col) {
+int Matrix::findNextPivot(const vector<vector<double>> &v2, size_t start_row, size_t col) {
     // go down each rows, return -1 if reached end (zero-col)
     for(size_t i = start_row; i < num_row; ++i) {
-        if(mat[i][col] != 0) return int(i);
+        if(v2[i][col] != 0) return int(i);
     }
     return -1;
 }
@@ -78,7 +78,7 @@ Matrix Matrix::getREF(bool reduced) {
 
         if(ref_mat[row][col] == 0) { // entry is 0
             
-            int pivot_row = findNextPivot(row, col);
+            int pivot_row = findNextPivot(ref_mat, row, col);
             if(pivot_row != -1) {
                 swap(ref_mat[row], ref_mat[unsigned(pivot_row)]);
             }
@@ -111,7 +111,6 @@ Matrix Matrix::getREF(bool reduced) {
         else {
             start_row = row + 1; // only need diagonal triangle 0s (left)
         }
-        new_mat.printMatrix();
 
         // eliminate the elements for other rows to obtain pivot column
         for(size_t other_row = start_row; other_row < num_row; ++other_row) {

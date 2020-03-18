@@ -17,7 +17,7 @@ class Matrix {
     void fillMatrix(const std::vector<std::vector<double>> &v2);
 
 
-    int findNextPivot(size_t r, size_t c);
+    int findNextPivot(const std::vector<std::vector<double>> &v2, size_t r, size_t c);
     Matrix getREF(bool reduced);
 
     Matrix multiply(const Matrix &mat_b);
