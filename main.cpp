@@ -70,7 +70,7 @@ void test_multiplication() {
 
 int main(int argc, char *argv[]) {
 
-    cout.precision(2);
+    cout.precision(3);
 
     test_REF();
     // test_multiplication();

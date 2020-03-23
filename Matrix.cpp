@@ -76,29 +76,26 @@ Matrix Matrix::getREF(bool reduced) {
     // row operations
     for(size_t row = 0; row < num_row; ++row) {
 
-        if(ref_mat[row][col] == 0) { // entry is 0
-            
+        bool zero_row = false;
+
+        // find pivot column
+        while(ref_mat[row][col] == 0) {
+
+            if(col == new_mat.num_col - 1) {
+                zero_row = true;
+                break;
+            }
+
             int pivot_row = findNextPivot(ref_mat, row, col);
             if(pivot_row != -1) {
                 swap(ref_mat[row], ref_mat[unsigned(pivot_row)]);
                 ++parity_ref;
+                break;
             }
-            else {
-                bool zero_row = true;
-                // search next column (back to current row and go right)
-                for(size_t i = col; i < num_col; ++i) {
-                    if(ref_mat[row][i] != 0) {
-                        // found non-zero -> make it pivot
-                        col = i;
-                        zero_row = false;
-                        break;
-                    }
-                } // for
+            ++col;
+        } // while
 
-                // all-zero row - so just skip to next row
-                if(zero_row) continue;
-            }
-        } // if 
+        if(zero_row) continue; // encounter a zero-row, skip to next row
 
         size_t start_row = 0; // for row ops
         if(reduced) {
