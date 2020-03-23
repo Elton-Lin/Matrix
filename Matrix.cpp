@@ -135,7 +135,7 @@ Matrix Matrix::getREF(bool reduced) {
 double Matrix::getDeterminant() {
 
     if(this->num_row != this->num_col) {
-        cerr << "does not support determinant for non-square matrix, returing 0" << endl;
+        cerr << "Determinant for non-square matrix not supported, returning 0" << endl;
         return 0;
     }
 
@@ -147,9 +147,9 @@ double Matrix::getDeterminant() {
         det *= v2[diag++];
     }
     det *= (parity_ref % 2) ? -1 : 1;  // odd: -1, even: +1
-    cout << "parity: " << parity_ref << endl;
-    return det;
+    parity_ref = 0; // reset
 
+    return det;
 }
 
 
