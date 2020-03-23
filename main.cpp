@@ -15,7 +15,7 @@ int check_input(const string &s) {
     return stoi(s);
 }
 
-void test_RREF() {
+void test_REF() {
 
     int row, col;
     string input;
@@ -30,9 +30,16 @@ void test_RREF() {
     cout << "Input Matrix: " << endl;
     m.printMatrix();
 
-    m.getRREF();
+    auto rref_m = m.getREF(true);
     cout << "RREF: " << endl;
-    m.printMatrix();
+    rref_m.printMatrix();
+
+    auto ref_m = m.getREF(false);
+    cout << "REF: " << endl;
+    ref_m.printMatrix();
+
+    double det = m.getDeterminant();
+    cout << "det: " << det << endl;
 
 }
 
@@ -65,8 +72,8 @@ int main(int argc, char *argv[]) {
 
     cout.precision(2);
 
-    // test_RREF();
-    test_multiplication();
+    test_REF();
+    // test_multiplication();
 
     
     return 0;

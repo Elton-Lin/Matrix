@@ -15,6 +15,7 @@ Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
     size_t diag = 0;
 
     // create the identity matrix for later use
+    // only works for square mat i think...
     for(auto &v: identity_mat) {
         v.resize(num_col);
         v[diag++] = 1;
@@ -22,7 +23,7 @@ Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
 }
 
 void Matrix::fillMatrix(const vector<vector<double>> &v2) {
-    mat = v2;
+    mat = v2; // v2 is a ref, but copied by assign op
 }
 
 // User input handling is fairly robust
@@ -52,32 +53,41 @@ void Matrix::fillMatrix() {
 }
 
 // find the next potential pivot in the current column
-int Matrix::findNextPivot(size_t start_row, size_t col) {
+int Matrix::findNextPivot(const vector<vector<double>> &v2, size_t start_row, size_t col) {
     // go down each rows, return -1 if reached end (zero-col)
     for(size_t i = start_row; i < num_row; ++i) {
-        if(mat[i][col] != 0) return int(i);
+        if(v2[i][col] != 0) return int(i);
     }
     return -1;
 }
 
-// might want to make it return the RREF (a new copy matrix)
-void Matrix::getRREF() {
 
-    size_t col = 0;
+// Perform Gausian elimination to obtain <Reduced> Row Echelon Form
+// For REF, an upper diagonalized matrix is formed (lower left all zeros)
+// REF is only used for determinant for now
+// O(n^3), there is a faster method using eigenvalues (but I need to learn it first...)
+Matrix Matrix::getREF(bool reduced) {
+
+    Matrix new_mat(this->num_row, this->num_col);
+    new_mat.fillMatrix(this->mat);
+    auto &ref_mat = new_mat.mat;
+
+    size_t col = 0; // pivot col
     // row operations
     for(size_t row = 0; row < num_row; ++row) {
 
-        if(mat[row][col] == 0) { // entry is 0
+        if(ref_mat[row][col] == 0) { // entry is 0
             
-            int pivot_row = findNextPivot(row, col);
+            int pivot_row = findNextPivot(ref_mat, row, col);
             if(pivot_row != -1) {
-                swap(mat[row], mat[unsigned(pivot_row)]);
+                swap(ref_mat[row], ref_mat[unsigned(pivot_row)]);
+                ++parity_ref;
             }
             else {
                 bool zero_row = true;
                 // search next column (back to current row and go right)
                 for(size_t i = col; i < num_col; ++i) {
-                    if(mat[row][i] != 0) {
+                    if(ref_mat[row][i] != 0) {
                         // found non-zero -> make it pivot
                         col = i;
                         zero_row = false;
@@ -90,27 +100,56 @@ void Matrix::getRREF() {
             }
         } // if 
 
-        double pivot = mat[row][col];
-        // divide entire row by the pivot to obtain pivot = 1 
-        // (division causes precision error?)
-        for(double &elem: mat[row]) {
-            elem /= pivot;
+        size_t start_row = 0; // for row ops
+        if(reduced) {
+            double pivot = ref_mat[row][col];
+            // divide entire row by the pivot to obtain pivot = 1 
+            // (division causes precision error?)
+            for(double &elem: ref_mat[row]) {
+                elem /= pivot;
+            }
+        }
+        else {
+            start_row = row + 1; // only need diagonal triangle 0s (left)
         }
 
-        // printMatrix();
-
         // eliminate the elements for other rows to obtain pivot column
-        for(size_t other_row = 0; other_row < num_row; ++other_row) {
+        for(size_t other_row = start_row; other_row < num_row; ++other_row) {
             if(other_row != row) {
 
-                double divisor = mat[other_row][col];
+                double pivot = ref_mat[row][col]; // is simply 1 in reduced mode
+                double divisor = ref_mat[other_row][col] / pivot;
                 for(size_t c = 0; c < num_col; ++c) {
-                    mat[other_row][c] -= (divisor * mat[row][c]);
+                    ref_mat[other_row][c] -= (divisor * ref_mat[row][c]);
                 }
             }
         }
         ++col; // proceed to next potnetial pivot column
     } // for row
+
+    return new_mat;
+}
+
+
+
+double Matrix::getDeterminant() {
+
+    if(this->num_row != this->num_col) {
+        cerr << "Determinant for non-square matrix not supported, returning 0" << endl;
+        return 0;
+    }
+
+    Matrix ref = this->getREF(false);
+    double det = 1;
+    size_t diag = 0;
+
+    for(auto &v2: ref.mat) {
+        det *= v2[diag++];
+    }
+    det *= (parity_ref % 2) ? -1 : 1;  // odd: -1, even: +1
+    parity_ref = 0; // reset
+
+    return det;
 }
 
 
