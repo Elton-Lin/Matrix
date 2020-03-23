@@ -4,12 +4,13 @@ A naïve implementation of a matrix class with various matrix operations
 To create a Matrix class that supports basic matrix operations with simple and efficient implementations.
 ## Functionality
 ### Operations/Properties
+- [x] REF(Row Echelon Form)
 - [x] RREF(Reduced Row Echelon Form)
-- [ ] Determinant
+- [x] Determinant
 - [ ] Inverse
-- [ ] Transpose
+- [x] Transpose
 - [ ] Matrix Addition, Subtraction
-- [ ] Matrix Multiplication
+- [x] Matrix Multiplication
 - [ ] Solving Linear Systems
 ### Implementation Details
 See Wiki
