@@ -68,13 +68,31 @@ void test_multiplication() {
     product.printMatrix();
 }
 
+void test_inverse() {
+    int row, col;
+    string input;
+
+    cout << "Please enter number of rows: ";
+    getline(cin, input); row = check_input(input);
+    cout << "Please enter number of columns: ";
+    getline(cin, input); col = check_input(input);
+
+    Matrix m((size_t(row)), (size_t(col)));
+    m.fillMatrix();
+    cout << "Input Matrix: " << endl;
+    m.printMatrix();
+
+    Matrix mInv = m.getInverse();
+    mInv.printMatrix();
+}
+
 int main(int argc, char *argv[]) {
 
     cout.precision(2);
 
-    test_REF();
+    //test_REF();
     // test_multiplication();
 
-    
+    test_inverse();
     return 0;
 }

@@ -12,6 +12,8 @@ class Matrix {
 
     int findNextPivot(const std::vector<std::vector<double>> &v2, size_t r, size_t c);
 
+    double getCofactor(size_t i, size_t j);
+
     public:
 
     Matrix(size_t r, size_t c);//: num_row(r), num_col(c) {}
@@ -21,8 +23,10 @@ class Matrix {
 
     Matrix getREF(bool reduced);
     Matrix multiply(const Matrix &mat_b);
-    Matrix transpose(const Matrix &mat);
+    Matrix transpose();
     double getDeterminant();
+    Matrix getInverse();
+    Matrix getCofactorMatrix();
 
     void printMatrix();
 };

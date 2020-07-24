@@ -177,9 +177,14 @@ Matrix Matrix::multiply(const Matrix &mat_b) {
 
 
 // Transpose the matrix
-Matrix Matrix::transpose(const Matrix &mat) {
-
-    return Matrix(mat.num_col, mat.num_row); // placeholder
+Matrix Matrix::transpose() {
+    Matrix tr(num_col, num_row);
+    for (size_t i = 0; i < num_col; ++i) {
+        for (size_t j = 0; j < num_row; ++j) {
+            tr.mat[i][j] = this->mat[j][i];
+        }
+    }
+    return tr;
 }
 
 
@@ -202,4 +207,59 @@ void Matrix::printMatrix() {
     //     }
     //     cout << endl;
     // }
+}
+
+double Matrix::getCofactor(size_t row, size_t col) {
+    size_t p = 0, q = 0;
+    Matrix temp(num_row - 1, num_col - 1);
+    for (size_t i = 0; i < num_row; ++i) {
+        for (size_t j = 0; j < num_col; ++j) {
+            // Copy elements that don't match with row or col
+            if (i != row && j != col) {
+                temp.mat[p][q++] = this->mat[i][j];
+            }
+            // Reset for next row when this row is filled
+            if (q == num_col - 1) {
+                p++;
+                q = 0;
+            }
+        }
+    }
+    return temp.getDeterminant();
+}
+
+Matrix Matrix::getCofactorMatrix() {
+    Matrix cof(num_row, num_col);
+    if (num_row == 1) {
+        cof.fillMatrix(identity_mat);
+        return cof;
+    }
+
+    int sign = 1;
+    vector<vector<double>> cofactors = vector<vector<double> >(num_row, vector<double>(num_col));
+
+    for (size_t i = 0; i < num_row; ++i) {
+        for (size_t j = 0; j < num_col; ++j) {
+            cofactors[i][j] = getCofactor(i, j);
+            sign = ((i+j)%2 == 0)? 1: -1;
+            cof.mat[i][j] = sign * cofactors[i][j];
+        }
+    }
+    return cof;
+}
+
+Matrix Matrix::getInverse() {
+    if (this->getDeterminant() == 0) {
+        cerr << "Matrix is not invertible\n";
+        exit(0);
+    }
+    Matrix adj = getCofactorMatrix().transpose();
+    Matrix inv(num_row, num_col);
+
+    for (size_t i = 0; i < num_row; ++i) {
+        for (size_t j = 0; j < num_col; ++j) {
+            inv.mat[i][j] = adj.mat[i][j] / this->getDeterminant();
+        }
+    }
+    return inv;
 }
