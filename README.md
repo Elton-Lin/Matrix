@@ -7,7 +7,7 @@ To create a Matrix class that supports basic matrix operations with simple and e
 - [x] REF(Row Echelon Form)
 - [x] RREF(Reduced Row Echelon Form)
 - [x] Determinant
-- [ ] Inverse
+- [x] Inverse
 - [x] Transpose
 - [ ] Matrix Addition, Subtraction
 - [x] Matrix Multiplication
