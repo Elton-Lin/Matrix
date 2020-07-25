@@ -4,7 +4,9 @@
 
 using namespace std;
 
-Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
+Matrix::Matrix() {}
+
+Matrix::Matrix(size_t r, size_t c, bool fill = false): num_row(r), num_col(c) {
 
     mat.resize(num_row);
     for(auto &v: mat) {
@@ -19,6 +21,12 @@ Matrix::Matrix(size_t r, size_t c): num_row(r), num_col(c) {
     for(auto &v: identity_mat) {
         v.resize(num_col);
         v[diag++] = 1;
+    }
+
+    if(fill) {
+        fillMatrix();
+        cout << "The Input Matrix: " << endl;
+        printMatrix();
     }
 }
 
@@ -177,7 +185,7 @@ Matrix Matrix::multiply(const Matrix &mat_b) {
 
 
 // Transpose the matrix
-Matrix Matrix::transpose() {
+Matrix Matrix::getTranspose() {
     Matrix tr(num_col, num_row);
     for (size_t i = 0; i < num_col; ++i) {
         for (size_t j = 0; j < num_row; ++j) {
@@ -253,7 +261,7 @@ Matrix Matrix::getInverse() {
         cerr << "Matrix is not invertible\n";
         exit(0);
     }
-    Matrix adj = getCofactorMatrix().transpose();
+    Matrix adj = getCofactorMatrix().getTranspose();
     Matrix inv(num_row, num_col);
 
     for (size_t i = 0; i < num_row; ++i) {

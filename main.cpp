@@ -1,9 +1,10 @@
 #include "Matrix.h"
 #include <cassert>
+#include <iomanip>
 
 using namespace std;
 
-int check_input(const string &s) {
+size_t cast_to_sizet(const string &s) {
 
     for(char c: s) {
         if(!isdigit(c)) { // also takes care of negative numbers
@@ -11,88 +12,108 @@ int check_input(const string &s) {
             exit(0);
         }
     }
-
-    return stoi(s);
+    
+    return size_t(stoi(s));
 }
 
-void test_REF() {
 
-    int row, col;
+void print_available_operation() {
+
+    cout << "Please select a matrix operation to perform:\n"
+        << "0: quit\n"
+        << "1: get determinant\n"
+        << "2: get REF\n"
+        << "3: get RREF\n"
+        << "4: multiply 2 matrix\n"
+        << "5: get inverse\n"
+        << "6: get transpose\n"
+        << "Enter: \n";
+}
+
+
+pair<int, int> get_dimensions() {
+    size_t row, col;
     string input;
 
     cout << "Please enter number of rows: ";
-    getline(cin, input); row = check_input(input);
+    getline(cin, input); row = cast_to_sizet(input);
     cout << "Please enter number of columns: ";
-    getline(cin, input); col = check_input(input);
+    getline(cin, input); col = cast_to_sizet(input);
 
-    Matrix m((size_t(row)), (size_t(col)));
-    m.fillMatrix();
-    cout << "Input Matrix: " << endl;
-    m.printMatrix();
-
-    auto rref_m = m.getREF(true);
-    cout << "RREF: " << endl;
-    rref_m.printMatrix();
-
-    auto ref_m = m.getREF(false);
-    cout << "REF: " << endl;
-    ref_m.printMatrix();
-
-    double det = m.getDeterminant();
-    cout << "det: " << det << endl;
-
+    return {row, col};
 }
 
-void test_multiplication() {
-    //for testing multiplication
-    string input;
-    int row2,col2;
-    cout << "Please enter number of rows for the second matrix: ";
-    getline(cin, input); row2 = check_input(input);
-    cout << "Please enter number of columns for the second matrix: ";
-    getline(cin, input); col2 = check_input(input);
 
-    Matrix b((size_t(row2)), (size_t(col2)));
-    b.fillMatrix();
+void test_an_operation(size_t op_code) {
 
-    int row3,col3;
-    cout << "Please enter number of rows for the third matrix: ";
-    getline(cin, input); row3 = check_input(input);
-    cout << "Please enter number of columns for the third matrix: ";
-    getline(cin, input); col3 = check_input(input);
+    if(op_code == 0) 
+        return;
 
-    Matrix c((size_t(row3)), (size_t(col3)));
-    c.fillMatrix();
+    size_t row, col;
+    tie(row, col) = get_dimensions();
+    Matrix m(row, col, true);
 
-    Matrix product = b.multiply(c);
-    product.printMatrix();
+    Matrix result_matrix;
+    switch (op_code) {
+    case 1: {// numeric result
+        double det = m.getDeterminant();
+        cout << "determinant: " << det << endl;
+        return;
+    }
+    case 2: {
+        result_matrix = m.getREF(false);
+        break;
+    }
+    case 3: {
+        result_matrix = m.getREF(true);
+        break;
+    }
+    case 4: {
+        size_t row, col;
+        tie(row, col) = get_dimensions();
+        Matrix m2(row, col, true);
+
+        result_matrix = m.multiply(m2);
+        break;
+    }
+    case 5: {
+        result_matrix = m.getInverse();
+        // auto identity = m.multiply(result_matrix);
+        // identity.printMatrix();
+        break;
+    }
+    case 6: {
+        result_matrix = m.getTranspose();
+        break;
+    }
+    }
+
+    cout << "result matrix: \n";
+    result_matrix.printMatrix();
 }
 
-void test_inverse() {
-    int row, col;
-    string input;
-
-    cout << "Please enter number of rows: ";
-    getline(cin, input); row = check_input(input);
-    cout << "Please enter number of columns: ";
-    getline(cin, input); col = check_input(input);
-
-    Matrix m((size_t(row)), (size_t(col)));
-    m.fillMatrix();
-    cout << "Input Matrix: " << endl;
-    m.printMatrix();
-
-    Matrix mInv = m.getInverse();
-    mInv.printMatrix();
-}
 
 int main(int argc, char *argv[]) {
 
-    cout.precision(2);
+    // this translates it to scientific number then set precision
+    // cout.precision(2);
+    // e.g. 0.00015 --> 1.5e-4
 
-    //test_REF();
-    // test_multiplication();
+    // this direcly sets precision
+    // e.g. 0.00015 --> 0.00
+    cout << fixed;
+    cout << setprecision(2);
 
-    test_inverse();
+    print_available_operation();
+
+    string op_code;
+    getline(cin, op_code);
+    test_an_operation(cast_to_sizet(op_code));
+    
     return 0;
 }
+// some ideas
+// - make it iteractive:
+//  - put a while to create a session
+//  - hold a set of matrix user created or resulted from operation
+//    and make them reusable (with a map)

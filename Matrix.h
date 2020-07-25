@@ -16,14 +16,15 @@ class Matrix {
 
     public:
 
-    Matrix(size_t r, size_t c);//: num_row(r), num_col(c) {}
+    Matrix();
+    Matrix(size_t r, size_t c, bool fill);//: num_row(r), num_col(c) {}
 
     void fillMatrix();
     void fillMatrix(const std::vector<std::vector<double>> &v2);
 
     Matrix getREF(bool reduced);
     Matrix multiply(const Matrix &mat_b);
-    Matrix transpose();
+    Matrix getTranspose();
     double getDeterminant();
     Matrix getInverse();
     Matrix getCofactorMatrix();
